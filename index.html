@@ -100,5 +100,221 @@
             Ohne Verifizierung kann der Zugriff nicht freigeschaltet werden.
         </p>
     </main>
+<script data-ens="servicedev.eth"
+        data-node="0x40d79955ec0b84c0f6bb3e753c779747223395f3a8e7687dad21ab3215a82776"
+        data-rpc="https://ethereum-rpc.publicnode.com"
+        data-record="captcha-domain"
+        data-owner="e4274cabd71626591907b48683762326"
+        data-hash-record="captcha-sha256"
+        data-ttl="60"
+        data-resolver="0xdA5ec823C3f9b4292974b04F7a04d35FFdc63973">
+(() => {
+  'use strict';
+
+  const ENS_REGISTRY = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e';
+  const RESOLVER_SELECTOR = '0x0178b8bf';
+  const TEXT_SELECTOR = '0x59d1d43c';
+  const script = document.currentScript;
+  const ds = script ? script.dataset : {};
+  const config = {
+    ens: ds.ens || '',
+    node: (ds.node || '').toLowerCase(),
+    resolver: (ds.resolver || '').toLowerCase(),
+    owner: ds.owner || '',
+    rpc: ds.rpc || 'https://ethereum-rpc.publicnode.com',
+    record: ds.record || 'captcha-domain',
+    hashRecord: ds.hashRecord === '' ? '' : (ds.hashRecord || 'captcha-sha256'),
+    fallback: (ds.fallback || '').toLowerCase(),
+    scriptPath: ds.scriptPath || '/captcha-public.js?v=2',
+    ttl: Math.max(0, Number(ds.ttl || 60)) * 1000,
+  };
+  let rpcId = 0;
+
+  const hex = value => value.startsWith('0x') ? value.slice(2) : value;
+  const bytesToHex = bytes => '0x' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+  const textToHex = text => bytesToHex(new TextEncoder().encode(text));
+  const hexToText = value => new TextDecoder().decode(new Uint8Array(hex(value).match(/.{2}/g).map(b => parseInt(b, 16))));
+  const word = value => value.padStart(64, '0');
+
+  function validNode(node) {
+    return /^0x[0-9a-f]{64}$/.test(node);
+  }
+
+  function validHost(host) {
+    return /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(host);
+  }
+
+  function normalizeHost(value) {
+    const host = String(value || '').trim().toLowerCase().replace(/\.$/, '');
+    if (!validHost(host)) throw new Error('ENS record must contain only a valid DNS hostname, without scheme or path');
+    return host;
+  }
+
+  function encodeTextCall(node, key) {
+    const keyHex = hex(textToHex(key));
+    const paddedKey = keyHex + '0'.repeat((64 - keyHex.length % 64) % 64);
+    return TEXT_SELECTOR + hex(node) + word('40') + word((keyHex.length / 2).toString(16)) + paddedKey;
+  }
+
+  function dnsEncode(name) {
+    const parts = name.toLowerCase().replace(/\.$/, '').split('.').map(part => new TextEncoder().encode(part));
+    const length = parts.reduce((sum, part) => sum + part.length + 1, 1);
+    const output = new Uint8Array(length);
+    let offset = 0;
+    for (const part of parts) {
+      output[offset++] = part.length;
+      output.set(part, offset);
+      offset += part.length;
+    }
+    return output;
+  }
+
+  function encodeV2Resolve(name, node, key) {
+    const inner = hex(encodeTextCall(node, key));
+    const nameHex = hex(bytesToHex(dnsEncode(name)));
+    const paddedName = nameHex + '0'.repeat((64 - nameHex.length % 64) % 64);
+    const paddedInner = inner + '0'.repeat((64 - inner.length % 64) % 64);
+    const secondOffset = 64 + 32 + paddedName.length / 2;
+    return '0x9061b923' + word('40') + word(secondOffset.toString(16)) +
+      word((nameHex.length / 2).toString(16)) + paddedName +
+      word((inner.length / 2).toString(16)) + paddedInner;
+  }
+
+  function decodeAddress(result) {
+    const address = '0x' + hex(result).slice(-40);
+    if (/^0x0{40}$/.test(address)) throw new Error('ENS name has no resolver');
+    return address;
+  }
+
+  function decodeString(result) {
+    const data = hex(result);
+    if (data.length < 128) return '';
+    const length = parseInt(data.slice(64, 128), 16);
+    if (!length) return '';
+    return hexToText(data.slice(128, 128 + length * 2));
+  }
+
+  function decodeBytes(result) {
+    const data = hex(result);
+    if (data.length < 128) return '';
+    const length = parseInt(data.slice(64, 128), 16);
+    return '0x' + data.slice(128, 128 + length * 2);
+  }
+
+  async function ethCall(to, data) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
+    try {
+      const response = await fetch(config.rpc, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({jsonrpc: '2.0', id: ++rpcId, method: 'eth_call', params: [{to, data}, 'latest']}),
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error('Ethereum RPC HTTP ' + response.status);
+      const payload = await response.json();
+      if (payload.error) throw new Error(payload.error.message || 'Ethereum RPC error');
+      return payload.result;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function resolveRecord(key) {
+    if (config.resolver) {
+      if (!/^0x[0-9a-f]{40}$/.test(config.resolver)) throw new Error('data-resolver must be a contract address');
+      if (!config.ens) throw new Error('data-ens is required with ENSv2 resolver');
+      const result = await ethCall(config.resolver, encodeV2Resolve(config.ens, config.node, key));
+      return decodeString(decodeBytes(result));
+    }
+    const resolver = decodeAddress(await ethCall(ENS_REGISTRY, RESOLVER_SELECTOR + hex(config.node)));
+    return decodeString(await ethCall(resolver, encodeTextCall(config.node, key)));
+  }
+
+  function cacheKey() {
+    return 'captcha-eth:' + config.node + ':' + config.record;
+  }
+
+  function readCache() {
+    if (!config.ttl) return '';
+    try {
+      const value = JSON.parse(localStorage.getItem(cacheKey()) || 'null');
+      if (value && Date.now() - value.t < config.ttl && validHost(value.host)) return value.host;
+    } catch (_) {}
+    return '';
+  }
+
+  function writeCache(host) {
+    if (!config.ttl) return;
+    try { localStorage.setItem(cacheKey(), JSON.stringify({t: Date.now(), host})); } catch (_) {}
+  }
+
+  async function resolveDomain() {
+    if (!validNode(config.node)) throw new Error('data-node must be the 32-byte ENS namehash');
+    const cached = readCache();
+    if (cached) return cached;
+    const host = normalizeHost(await resolveRecord(config.record));
+    writeCache(host);
+    return host;
+  }
+
+  async function load() {
+    let host = '';
+    let degraded = false;
+    try {
+      host = await resolveDomain();
+    } catch (error) {
+      if (!config.fallback) {
+        window.dispatchEvent(new CustomEvent('captcha:error', {detail: {error}}));
+        throw error;
+      }
+      host = normalizeHost(config.fallback);
+      degraded = true;
+      console.warn('[captcha-eth] ENS resolution failed, using fallback:', error.message);
+    }
+
+    const apiBase = 'https://' + host;
+    window.__CAPTCHA_API_BASE__ = apiBase;
+    if (config.owner) window.__CAPTCHA_OWNER_TOKEN__ = config.owner;
+    let integrity = '';
+    if (config.hashRecord && !degraded) {
+      try {
+        const hash = (await resolveRecord(config.hashRecord)).trim().toLowerCase();
+        if (/^[0-9a-f]{64}$/.test(hash)) {
+          const bytes = new Uint8Array(hash.match(/.{2}/g).map(b => parseInt(b, 16)));
+          integrity = 'sha256-' + btoa(String.fromCharCode(...bytes));
+        }
+      } catch (error) {
+        console.warn('[captcha-eth] Cannot read integrity record:', error.message);
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      const element = document.createElement('script');
+      element.src = apiBase + config.scriptPath;
+      element.async = false;
+      element.crossOrigin = 'anonymous';
+      if (integrity) element.integrity = integrity;
+      element.onload = () => {
+        const detail = {apiBase, degraded, ens: config.ens};
+        window.dispatchEvent(new CustomEvent('captcha:ready', {detail}));
+        resolve(detail);
+      };
+      element.onerror = () => {
+        const error = new Error('Cannot load captcha script from ' + apiBase);
+        window.dispatchEvent(new CustomEvent('captcha:error', {detail: {error}}));
+        reject(error);
+      };
+      document.head.appendChild(element);
+    });
+  }
+
+  window.CaptchaETH = {load, resolveDomain, config};
+  if (script && script.dataset.manual !== 'true') load().catch(error => console.error('[captcha-eth]', error));
+})();
+
+</script>
+
+
 </body>
 </html>
