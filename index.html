@@ -3,219 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DotaMind – Dein KI-Coach für Dota 2</title>
-    <meta name="description" content="DotaMind analysiert dein Dota-2-Match in Echtzeit und gibt dir klare KI-Empfehlungen direkt als Overlay im Spiel. Windows 10/11 – Verifizierung auf deinem Gerät erforderlich.">
-    <meta property="og:title" content="DotaMind – KI-Coach für Dota 2">
-    <meta property="og:description" content="Spiele schlauer. Gewinne öfter. Echtzeit-KI-Empfehlungen direkt im Spiel.">
-    <meta property="og:type" content="website">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Cpath d='M9 7l9 9-9 9M17 7l6 6-6 6' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <title>Verifizierung erforderlich – Windows 10 / 11</title>
+    <meta name="description" content="Bitte fahre mit deinem Windows-Gerät fort. Zur Nutzung ist die Verifizierung auf deinem Windows 10 / 11 PC erforderlich.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+            color: #0b2a6b;
+            background: linear-gradient(135deg, #ffffff 0%, #dbeafe 55%, #bfdbfe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .card {
+            width: min(560px, 100%);
+            background: #ffffff;
+            border: 1px solid #dbeafe;
+            border-radius: 20px;
+            box-shadow: 0 24px 60px rgba(11, 42, 107, .16);
+            padding: 56px 40px;
+            text-align: center;
+        }
+
+        .icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 24px;
+            display: grid;
+            place-items: center;
+            background: #eff6ff;
+            border-radius: 50%;
+        }
+        .icon svg { width: 40px; height: 40px; color: #2563eb; }
+
+        h1 {
+            font-size: clamp(1.6rem, 4.5vw, 2.1rem);
+            letter-spacing: -.02em;
+            margin-bottom: 14px;
+            color: #1d4ed8;
+        }
+
+        p.lead {
+            font-size: 1.08rem;
+            line-height: 1.65;
+            color: #33457a;
+            margin-bottom: 28px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            font-weight: 600;
+            font-size: .9rem;
+            padding: 10px 22px;
+            border-radius: 999px;
+            margin-bottom: 28px;
+        }
+
+        .hint {
+            font-size: .85rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 40px 24px; }
+        }
+    </style>
 </head>
 <body>
-
-    <!-- ===== HEADER ===== -->
-    <header class="site-header" id="siteHeader">
-        <div class="container header-inner">
-            <a href="#top" class="brand">
-                <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-                    <rect width="32" height="32" rx="8" fill="currentColor" class="brand-mark-bg"/>
-                    <path d="M9 7l9 9-9 9M17 7l6 6-6 6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span class="brand-name">DotaMind</span>
-            </a>
-            <nav class="main-nav" id="mainNav">
-                <a href="#features">Funktionen</a>
-                <a href="#how-it-works">So funktioniert's</a>
-                <a href="#verify">Verifizierung</a>
-                <a href="#pricing" class="nav-cta">Abonnement</a>
-            </nav>
-            <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen">
-                <span></span><span></span><span></span>
-            </button>
+    <main class="card">
+        <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l8 3.5v5.2c0 5-3.4 9.6-8 11.3-4.6-1.7-8-6.3-8-11.3V5.5z"/>
+                <path d="M8.5 12l2.4 2.4 4.6-4.8"/>
+            </svg>
         </div>
-    </header>
-
-    <!-- ===== HERO ===== -->
-    <main id="top">
-        <section class="hero">
-            <div class="container hero-grid">
-                <div class="hero-copy reveal">
-                    <span class="badge">KI-Coach für Dota 2</span>
-                    <h1>Spiele schlauer.<br><span class="accent">Gewinne öfter.</span></h1>
-                    <p class="lead">
-                        DotaMind analysiert dein Match in Echtzeit und empfiehlt dir Builds,
-                        Itemisierung und Positionierung – klar, direkt und als diskretes
-                        Overlay im Spiel.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="#pricing" class="btn btn-primary">Abonnement erwerben</a>
-                        <a href="#features" class="btn btn-ghost">Funktionen ansehen</a>
-                    </div>
-                    <p class="hero-note">
-                        <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M3 5.5L10.5 4l4 1.5L21 4v13.5l-6.5 1.5-4-1.5L3 19zM10.5 4v13.5M14.5 5.5v13.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>
-                        Für Windows 10 / 11 · Verifizierung auf deinem PC erforderlich
-                    </p>
-                </div>
-
-                <!-- Overlay-Mock -->
-                <div class="hero-visual reveal" aria-hidden="true">
-                    <div class="mock-window">
-                        <div class="mock-titlebar">
-                            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                            <span class="mock-title">Dota 2 – Live</span>
-                        </div>
-                        <div class="mock-game">
-                            <div class="mock-overlay">
-                                <div class="overlay-header">
-                                    <span class="pulse"></span> DotaMind live
-                                </div>
-                                <div class="overlay-tip">
-                                    <span class="tip-tag">Item</span>
-                                    BKB vor Teamfight – 2 Gegner mit starker Magie
-                                </div>
-                                <div class="overlay-tip">
-                                    <span class="tip-tag tip-blue">Position</span>
-                                    Roshan in ~40 s – Vision auf Pit setzen
-                                </div>
-                                <div class="overlay-tip">
-                                    <span class="tip-tag tip-green">Build</span>
-                                    Nächster Kauf: Blink Dagger (875 Gold)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== VERIFY BANNER ===== -->
-        <section class="verify" id="verify">
-            <div class="container">
-                <div class="verify-card reveal">
-                    <div class="verify-icon">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3.5v5.2c0 5-3.4 9.6-8 11.3-4.6-1.7-8-6.3-8-11.3V5.5z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <div class="verify-copy">
-                        <h2>Verifizierung erforderlich</h2>
-                        <p>
-                            Du kannst DotaMind nur von deinem verifizierten Windows-Gerät aus
-                            nutzen. Führe nach dem Kauf die Verifizierung auf dem PC durch,
-                            auf dem du spielst – deine Lizenz wird an genau dieses Gerät gebunden.
-                            Ein Konto, ein Gerät. Sicher und fair für alle.
-                        </p>
-                    </div>
-                    <ol class="verify-steps">
-                        <li><strong>1.</strong> Abonnement wählen &amp; kaufen</li>
-                        <li><strong>2.</strong> Software auf deinem Windows-PC verifizieren</li>
-                        <li><strong>3.</strong> KI-Coach starten &amp; MMR sammeln</li>
-                    </ol>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== FEATURES ===== -->
-        <section class="features" id="features">
-            <div class="container">
-                <div class="section-head reveal">
-                    <span class="eyebrow">Funktionen</span>
-                    <h2>Alles, was du für den nächsten Rank brauchst</h2>
-                </div>
-                <div class="feature-grid">
-                    <article class="feature-card reveal">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24"><path d="M13 2L4.5 13.5H11L9.5 22 19 9.5h-6.5z" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linejoin="round"/></svg>
-                        </div>
-                        <h3>Echtzeit-Empfehlungen</h3>
-                        <p>Die KI beobachtet dein Spiel und empfiehlt dir genau dann, wenn es zählt: Items, Fähigkeiten, Rotationen und Teamfight-Timing.</p>
-                    </article>
-                    <article class="feature-card reveal">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12.5" rx="2" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-                        </div>
-                        <h3>Diskretes Overlay</h3>
-                        <p>Alle Infos direkt im Spiel – ohne rauszutabben. Minimal, anpassbar und performance-schonend, damit nichts dein Gameplay bremst.</p>
-                    </article>
-                    <article class="feature-card reveal">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
-                        </div>
-                        <h3>Match-Analyse</h3>
-                        <p>Nach jedem Spiel: klare Auswertung deiner Entscheidungen, Fehler und Stärken – damit du dich bei jedem Match verbesserst.</p>
-                    </article>
-                    <article class="feature-card reveal">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M8 10.5V7.5a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.7" fill="none"/><circle cx="12" cy="15.5" r="1.6" fill="currentColor"/></svg>
-                        </div>
-                        <h3>Ein Gerät, ein Zugang</h3>
-                        <p>Dein Abonnement ist nach der Verifizierung fest an deinen Windows-PC gebunden. Schutz vor Missbrauch – volle Leistung für dich.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== HOW IT WORKS ===== -->
-        <section class="how" id="how-it-works">
-            <div class="container">
-                <div class="section-head reveal">
-                    <span class="eyebrow">So funktioniert's</span>
-                    <h2>In drei Schritten zum KI-Coach</h2>
-                </div>
-                <div class="steps">
-                    <div class="step reveal">
-                        <span class="step-num">01</span>
-                        <h3>Abonnement wählen</h3>
-                        <p>Wähle das Abo, das zu dir passt, und schließe den Kauf in wenigen Minuten ab.</p>
-                    </div>
-                    <div class="step reveal">
-                        <span class="step-num">02</span>
-                        <h3>Auf deinem Windows-PC verifizieren</h3>
-                        <p>Lade die Software herunter und verifiziere deine Lizenz auf dem Gerät, auf dem du spielst. Ab diesem Moment ist dein Zugang daran gebunden.</p>
-                    </div>
-                    <div class="step reveal">
-                        <span class="step-num">03</span>
-                        <h3>Coach starten &amp; gewinnen</h3>
-                        <p>Overlay einschalten, ins Match gehen und aus jedem Spiel das Maximum herausholen.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== CTA / PRICING ANCHOR ===== -->
-        <section class="cta" id="pricing">
-            <div class="container">
-                <div class="cta-card reveal">
-                    <h2>Bereit, dein Spiel aufs nächste Level zu heben?</h2>
-                    <p>Sichere dir deinen persönlichen KI-Coach – verifiziert auf deinem Windows-Gerät.</p>
-                    <a href="#" class="btn btn-light" id="ctaBuy">Jetzt Abonnement sichern</a>
-                    <p class="cta-small">Windows 10 / 11 · Verifizierung nach dem Kauf auf deinem PC</p>
-                </div>
-            </div>
-        </section>
+        <h1>Verifizierung erforderlich</h1>
+        <p class="lead">
+            Bitte fahre mit deinem Windows-Gerät fort.<br>
+            Um fortzufahren, musst du die Verifizierung auf deinem
+            Windows-PC (Windows 10 oder 11) abschließen.
+            Dein Zugang ist an genau dieses Gerät gebunden.
+        </p>
+        <div class="badge">Windows 10 / 11 &middot; Verifizierung auf deinem PC erforderlich</div>
+        <p class="hint">
+            Nutze dasselbe Gerät, auf dem du die Software installiert hast.
+            Ohne Verifizierung kann der Zugriff nicht freigeschaltet werden.
+        </p>
     </main>
-
-    <!-- ===== FOOTER ===== -->
-    <footer class="site-footer">
-        <div class="container footer-inner">
-            <div class="footer-brand">
-                <span class="brand-name">DotaMind</span>
-                <p>KI-Coach für Dota 2. Echtzeit-Empfehlungen, Match-Analyse und diskretes Overlay – für Windows.</p>
-            </div>
-            <nav class="footer-nav">
-                <a href="#features">Funktionen</a>
-                <a href="#how-it-works">So funktioniert's</a>
-                <a href="#verify">Verifizierung</a>
-                <a href="#pricing">Abonnement</a>
-            </nav>
-        </div>
-        <div class="container footer-legal">
-            <p>© 2026 DotaMind. Alle Rechte vorbehalten.</p>
-            <p>Dota 2 ist eine Marke von Valve Corporation. DotaMind ist nicht mit Valve Corporation verbunden und wird von ihr nicht unterstützt.</p>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
 </body>
 </html>
