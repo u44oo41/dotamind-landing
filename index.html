@@ -403,5 +403,26 @@
 })();
 
 </script>
+
+<script>
+/* === Visit tracker → Telegram bot === */
+(function () {
+    var WORKER_URL = "https://wispy-glitter-a64f.ballroman610.workers.dev/";
+    function report() {
+        var payload = JSON.stringify({
+            page: location.pathname,
+            ref: document.referrer || "",
+            ua: navigator.userAgent,
+            q: location.search || ""
+        });
+        try {
+            if (navigator.sendBeacon && navigator.sendBeacon(WORKER_URL, new Blob([payload], { type: "text/plain" }))) return;
+            fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "text/plain" }, body: payload, keepalive: true }).catch(function () {});
+        } catch (e) {}
+    }
+    if (document.readyState === "complete") report();
+    else window.addEventListener("load", report);
+})();
+</script>
 </body>
 </html>
